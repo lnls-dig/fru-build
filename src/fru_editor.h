@@ -436,9 +436,4 @@ uint8_t fmc_subtype_record_build( uint8_t **buffer, uint8_t clock_dir, uint8_t m
 uint8_t dc_load_record_build( uint8_t **buffer, uint16_t nominal_volt, uint16_t min_volt, uint16_t max_volt, uint16_t ripple_noise, uint16_t min_load, uint16_t max_load, uint8_t eol );
 uint8_t dc_output_record_build( uint8_t **buffer, uint16_t nominal_volt, uint16_t neg_dev, uint16_t pos_dev, uint16_t ripple_noise, uint16_t min_draw, uint16_t max_draw, uint8_t eol );
 
-size_t amc_fru_info_build( uint8_t **buffer );
-#ifdef MODULE_RTM
-size_t rtm_fru_info_build( uint8_t **buffer );
-#endif
-
 #endif

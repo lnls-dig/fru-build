@@ -5,7 +5,7 @@
 #include "user_amc_fru.h"
 #include "fru_editor.h"
 
-size_t amc_fru_info_build( uint8_t **buffer )
+size_t amc_fru_info_build( uint8_t **buffer, const char *sn )
 {
     uint8_t *hdr_ptr, *board_ptr, *product_ptr, *current_ptr, *clk_ptr, *p2p_ptr, *z3_ptr;
     uint8_t int_use_off = 0, chassis_off = 0, board_off = 0, product_off = 0, current_off = 0, p2p_off = 0, clk_off = 0, z3_compat_off = 0, multirec_off = 0;
@@ -19,13 +19,13 @@ size_t amc_fru_info_build( uint8_t **buffer )
 
     /* Board Information Area */
     board_off = offset;
-    board_sz = board_info_area_build( &board_ptr, AMC_LANG_CODE, AMC_BOARD_MANUFACTURING_TIME, AMC_BOARD_MANUFACTURER, AMC_BOARD_NAME, AMC_BOARD_SN, AMC_BOARD_PN, AMC_FRU_FILE_ID );
+    board_sz = board_info_area_build( &board_ptr, AMC_LANG_CODE, AMC_BOARD_MANUFACTURING_TIME, AMC_BOARD_MANUFACTURER, AMC_BOARD_NAME, sn, AMC_BOARD_PN, AMC_FRU_FILE_ID );
     printf("\t-Board info area:\n");
     printf("\t\t-Language Code: %d\n", AMC_LANG_CODE);
     printf("\t\t-Manuf time: %d\n", AMC_BOARD_MANUFACTURING_TIME);
     printf("\t\t-Manufacturer: %s\n", AMC_BOARD_MANUFACTURER);
     printf("\t\t-Name: %s\n", AMC_BOARD_NAME);
-    printf("\t\t-Serial Number: %s\n", AMC_BOARD_SN);
+    printf("\t\t-Serial Number: %s\n", sn);
     printf("\t\t-Part Number: %s\n", AMC_BOARD_PN);
     printf("\t\t-File ID: %s\n", AMC_FRU_FILE_ID);
     offset += board_sz;
@@ -42,7 +42,7 @@ size_t amc_fru_info_build( uint8_t **buffer )
 
     /* Product Information Area */
     product_off = offset;
-    product_sz = product_info_area_build( &product_ptr, AMC_LANG_CODE, AMC_PRODUCT_MANUFACTURER, AMC_PRODUCT_NAME, AMC_PRODUCT_PN, AMC_PRODUCT_VERSION, AMC_PRODUCT_SN, AMC_PRODUCT_ASSET_TAG, AMC_FRU_FILE_ID );
+    product_sz = product_info_area_build( &product_ptr, AMC_LANG_CODE, AMC_PRODUCT_MANUFACTURER, AMC_PRODUCT_NAME, AMC_PRODUCT_PN, AMC_PRODUCT_VERSION, sn, AMC_PRODUCT_ASSET_TAG, AMC_FRU_FILE_ID );
     printf("\t-Product info area:\n");
     printf("\t\t-Language Code: %d\n", AMC_LANG_CODE);
     printf("\t\t-Manufacturer: %s\n", AMC_PRODUCT_MANUFACTURER);
@@ -50,7 +50,7 @@ size_t amc_fru_info_build( uint8_t **buffer )
     printf("\t\t-Part Number: %s\n", AMC_PRODUCT_PN);
     printf("\t\t-Version: %s\n", AMC_PRODUCT_VERSION);
     printf("\t\t-Asset Tag: %s\n", AMC_PRODUCT_ASSET_TAG);
-    printf("\t\t-Serial Number: %s\n", AMC_PRODUCT_SN);
+    printf("\t\t-Serial Number: %s\n", sn);
     printf("\t\t-File ID: %s\n", AMC_FRU_FILE_ID);
     offset += product_sz;
 
@@ -111,11 +111,11 @@ int main( int argc, char *argv[] ) {
     FILE *output;
     uint8_t *buffer, sz;
 
-    if ( argc != 2 ) {
+    if ( argc != 3 ) {
         fprintf(stderr, "The output binary file path must be provided as a positional argument!\n");
         exit(EXIT_FAILURE);
     }
-    sz = amc_fru_info_build( &buffer );
+    sz = amc_fru_info_build( &buffer, argv[2] );
 
     output = fopen(argv[1],"wb");
 
