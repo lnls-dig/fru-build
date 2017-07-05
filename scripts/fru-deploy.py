@@ -7,9 +7,9 @@ import shutil
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-b','--board', required=True, choices=['afc','amc','fmc'], help='Board type')
-parser.add_argument('-s','--start', required=True, help='Starting Serial Number of FMC list')
-parser.add_argument('-e','--end', required=True, type=str, help='Ending Serial Number of FMC list')
-parser.add_argument('-d','--dir', type=str, default=os.getcwd()+'/fmc_fru_bin', help='Output directory for binary files')
+parser.add_argument('-s','--start', required=True, help='Starting Serial Number of board list')
+parser.add_argument('-e','--end', required=True, type=str, help='Ending Serial Number of board list')
+parser.add_argument('-d','--dir', type=str, default=os.getcwd()+'/fru_bin', help='Output directory for binary files')
 args = parser.parse_args()
 
 sn_start = int(args.start)
