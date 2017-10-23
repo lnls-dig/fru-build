@@ -5,12 +5,14 @@
 #include "user_amc_fru.h"
 #include "fru_editor.h"
 
-size_t amc_fru_info_build( uint8_t **buffer, const char *sn )
+size_t amc_fru_info_build( uint8_t **buffer, const char *sn, const char *manuf_time )
 {
     uint8_t *hdr_ptr, *board_ptr, *product_ptr, *current_ptr, *clk_ptr, *p2p_ptr, *z3_ptr;
     uint8_t int_use_off = 0, chassis_off = 0, board_off = 0, product_off = 0, current_off = 0, p2p_off = 0, clk_off = 0, z3_compat_off = 0, multirec_off = 0;
     size_t int_use_sz = 0, chassis_sz = 0, board_sz = 0, product_sz = 0, current_sz = 0, p2p_sz = 0, clk_sz = 0, z3_compat_sz = 0;
     size_t offset = 0;
+
+    uint32_t m_time = strtoul(manuf_time, (char **) NULL, 10);
 
     printf(">AMC FRU Information:\n");
 
@@ -19,10 +21,10 @@ size_t amc_fru_info_build( uint8_t **buffer, const char *sn )
 
     /* Board Information Area */
     board_off = offset;
-    board_sz = board_info_area_build( &board_ptr, AMC_LANG_CODE, AMC_BOARD_MANUFACTURING_TIME, AMC_BOARD_MANUFACTURER, AMC_BOARD_NAME, sn, AMC_BOARD_PN, AMC_FRU_FILE_ID );
+    board_sz = board_info_area_build( &board_ptr, AMC_LANG_CODE, m_time, AMC_BOARD_MANUFACTURER, AMC_BOARD_NAME, sn, AMC_BOARD_PN, AMC_FRU_FILE_ID );
     printf("\t-Board info area:\n");
     printf("\t\t-Language Code: %d\n", AMC_LANG_CODE);
-    printf("\t\t-Manuf time: %d\n", AMC_BOARD_MANUFACTURING_TIME);
+    printf("\t\t-Manuf time: %d\n", m_time);
     printf("\t\t-Manufacturer: %s\n", AMC_BOARD_MANUFACTURER);
     printf("\t\t-Name: %s\n", AMC_BOARD_NAME);
     printf("\t\t-Serial Number: %s\n", sn);
@@ -111,11 +113,11 @@ int main( int argc, char *argv[] ) {
     FILE *output;
     uint8_t *buffer, sz;
 
-    if ( argc != 3 ) {
+    if ( argc != 4 ) {
         fprintf(stderr, "The output binary file path must be provided as a positional argument!\n");
         exit(EXIT_FAILURE);
     }
-    sz = amc_fru_info_build( &buffer, argv[2] );
+    sz = amc_fru_info_build( &buffer, argv[2], argv[3] );
 
     output = fopen(argv[1],"wb");
 

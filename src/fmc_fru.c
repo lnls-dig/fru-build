@@ -5,12 +5,14 @@
 #include "user_fmc_fru.h"
 #include "fru_editor.h"
 
-static size_t fmc_fru_info_build( uint8_t **buffer, const char* sn )
+static size_t fmc_fru_info_build( uint8_t **buffer, const char* sn, const char *manuf_time )
 {
     uint8_t *hdr_ptr, *board_ptr, *product_ptr, *fmc_subtype_ptr, *vadj_ptr, *p3v3_ptr, *p12v_ptr;
     uint8_t board_off = 0, product_off = 0, fmc_subtype_off = 0, vadj_off = 0, p3v3_off = 0, p12v_off = 0, multirec_off = 0;
     size_t board_sz = 0, product_sz = 0, fmc_subtype_sz = 0, vadj_sz = 0, p3v3_sz = 0, p12v_sz = 0;
     size_t offset = 0;
+
+    uint32_t m_time = strtoul(manuf_time, (char **) NULL, 10);
 
     printf(">FMC FRU Information:\n");
 
@@ -19,10 +21,10 @@ static size_t fmc_fru_info_build( uint8_t **buffer, const char* sn )
 
     /* Board Information Area */
     board_off = offset;
-    board_sz = board_info_area_build( &board_ptr, FMC_LANG_CODE, FMC_BOARD_MANUFACTURING_TIME, FMC_BOARD_MANUFACTURER, FMC_BOARD_NAME, sn, FMC_BOARD_PN, FMC_FRU_FILE_ID );
+    board_sz = board_info_area_build( &board_ptr, FMC_LANG_CODE, m_time, FMC_BOARD_MANUFACTURER, FMC_BOARD_NAME, sn, FMC_BOARD_PN, FMC_FRU_FILE_ID );
     printf("\t-Board info area:\n");
     printf("\t\t-Language Code: %d\n", FMC_LANG_CODE);
-    printf("\t\t-Manuf time: %d\n", FMC_BOARD_MANUFACTURING_TIME);
+    printf("\t\t-Manuf time: %d\n", m_time);
     printf("\t\t-Manufacturer: %s\n", FMC_BOARD_MANUFACTURER);
     printf("\t\t-Name: %s\n", FMC_BOARD_NAME);
     printf("\t\t-Serial Number: %s\n", sn);
@@ -112,12 +114,12 @@ int main( int argc, char *argv[] ) {
     FILE *output;
     uint8_t *buffer, sz;
 
-    if ( argc != 3 ) {
+    if ( argc != 4 ) {
         fprintf(stderr, "The output binary file path must be provided as a positional argument!\n");
         exit(EXIT_FAILURE);
     }
 
-    sz = fmc_fru_info_build( &buffer, argv[2] );
+    sz = fmc_fru_info_build( &buffer, argv[2], argv[3] );
 
     output = fopen(argv[1],"wb");
 
