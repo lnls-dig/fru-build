@@ -43,7 +43,7 @@
 #define FMC_PRODUCT_MANUFACTURER    "LNLS"
 #define FMC_PRODUCT_NAME            "FMC ADC 250M"
 #define FMC_PRODUCT_PN              "00001"
-#define FMC_PRODUCT_VERSION         "v1.0"
+#define FMC_PRODUCT_VERSION         "v2.3"
 //#define FMC_PRODUCT_SN              "1100130001"
 #define FMC_PRODUCT_ASSET_TAG       "No tag"
 
