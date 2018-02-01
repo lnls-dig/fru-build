@@ -1,3 +1,7 @@
 *.o
 amc_fru
 fmc_fru
+rtm_fru
+*.bin
+*.zip
+*~
