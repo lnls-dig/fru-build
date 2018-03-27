@@ -33,18 +33,18 @@
  *********************************************/
 #define FMC_BOARD_MANUFACTURING_TIME 11172960         /* Amount of minutes since 0:00 1/1/96 until 1/oct/2016 */
 #define FMC_BOARD_MANUFACTURER      "Creotech"
-#define FMC_BOARD_NAME              "FMC ADC 250M"
-//#define FMC_BOARD_SN                "1100130001"
-#define FMC_BOARD_PN                "FMC-ADC250"
+#define FMC_BOARD_NAME              "FMC_250M"
+//#define FMC_BOARD_SN                ""
+#define FMC_BOARD_PN                "FMC_250M:2.3"
 
 /*********************************************
  * Product information area
  *********************************************/
-#define FMC_PRODUCT_MANUFACTURER    "LNLS"
-#define FMC_PRODUCT_NAME            "FMC ADC 250M"
-#define FMC_PRODUCT_PN              "00001"
-#define FMC_PRODUCT_VERSION         "v2.3"
-//#define FMC_PRODUCT_SN              "1100130001"
+#define FMC_PRODUCT_MANUFACTURER    "CNPEM"
+#define FMC_PRODUCT_NAME            "FMC_ADC"
+#define FMC_PRODUCT_PN              "FMC_250M:2.3"
+#define FMC_PRODUCT_VERSION         "2.3"
+//#define FMC_PRODUCT_SN              ""
 #define FMC_PRODUCT_ASSET_TAG       "No tag"
 
 /*********************************************
