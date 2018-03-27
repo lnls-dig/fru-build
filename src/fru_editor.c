@@ -560,3 +560,35 @@ uint8_t dc_output_record_build( uint8_t **buffer, uint16_t nominal_volt, uint16_
 
     return len;
 }
+
+uint8_t fmc_adc_calibration_record( uint8_t **buffer, adc_cal_t *calibration_data, size_t data_len, uint8_t eol )
+{
+    size_t len = sizeof(fmc_adc_calibration_rec_t);
+
+    fmc_adc_calibration_rec_t *fmc_cal = (fmc_adc_calibration_rec_t *) malloc(len);
+
+    /* Clear the buffer */
+    memset(fmc_cal, 0x00, len);
+
+    /* Record Type ID */
+    fmc_cal->hdr.record_type_id = 0xFA;    //OEM FMC Record
+    fmc_cal->hdr.eol = eol;    //End of Records
+    fmc_cal->hdr.version = 0x02;    //Record format version
+    fmc_cal->hdr.record_len = len-sizeof(fru_multirecord_area_header_t);        //Record length
+    fmc_cal->manuf_id[0] = 0x00;
+    fmc_cal->manuf_id[1] = 0x00;
+    fmc_cal->manuf_id[2] = 0x00;   //Manufacturer ID (PICMG)
+
+    memcpy(&(fmc_cal->calibration[0]), calibration_data, data_len);
+
+    /* Checksums */
+
+    /* Record Checksum */
+    fmc_cal->hdr.record_chksum = calculate_chksum( ((uint8_t *)fmc_cal)+sizeof(fru_multirecord_area_header_t), fmc_cal->hdr.record_len);
+    /* Header Checksum */
+    fmc_cal->hdr.header_chksum = calculate_chksum( (uint8_t *)&(fmc_cal->hdr), sizeof(fru_multirecord_area_header_t));
+
+    *buffer = (uint8_t *)&fmc_cal[0];
+
+    return len;
+}

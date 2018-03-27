@@ -424,6 +424,17 @@ typedef struct dc_output_rec {
     uint8_t max_current_draw[2];
 } dc_output_rec_t;
 
+typedef struct {
+    uint8_t temperature;
+    uint32_t value;
+} adc_cal_t;
+
+typedef struct fmc_adc_calibration_rec {
+    fru_multirecord_area_header_t hdr;
+    uint8_t manuf_id[3];    /* Manufacturer ID. LS Byte first. 000000h if unspecified */
+    adc_cal_t calibration[10];
+} fmc_adc_calibration_rec_t;
+
 uint8_t fru_header_build( uint8_t **buffer, size_t int_use_off, size_t chassis_off, size_t board_off, size_t product_off, size_t multirecord_off );
 uint8_t board_info_area_build( uint8_t **buffer, uint8_t lang, uint32_t mfg_time, const char *manuf, const char *name, const char *sn, const char *pn, const char *file_id );
 uint8_t chassis_info_area_build( uint8_t **buffer, uint8_t type, const char *pn, const char *sn, uint8_t *custom_data, size_t custom_data_sz );
@@ -435,5 +446,5 @@ uint8_t zone3_compatibility_record_build( uint8_t **buffer, uint32_t compat_code
 uint8_t fmc_subtype_record_build( uint8_t **buffer, uint8_t clock_dir, uint8_t module_size, uint8_t p1_conn_size, uint8_t p2_conn_size, uint8_t p1_a_count, uint8_t p1_b_count, uint8_t p2_a_count, uint8_t p2_b_count, uint8_t p1_gbt, uint8_t p2_gbt, uint8_t eol );
 uint8_t dc_load_record_build( uint8_t **buffer, uint16_t nominal_volt, uint16_t min_volt, uint16_t max_volt, uint16_t ripple_noise, uint16_t min_load, uint16_t max_load, uint8_t eol );
 uint8_t dc_output_record_build( uint8_t **buffer, uint16_t nominal_volt, uint16_t neg_dev, uint16_t pos_dev, uint16_t ripple_noise, uint16_t min_draw, uint16_t max_draw, uint8_t eol );
-
+uint8_t fmc_adc_calibration_record( uint8_t **buffer, adc_cal_t *calibration_data, size_t data_len, uint8_t eol );
 #endif
