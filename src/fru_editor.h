@@ -193,11 +193,11 @@ typedef struct {
 
 typedef struct __attribute__ ((__packed__)) {
 #ifdef BF_MS_FIRST
-    uint8_t reserved:4;
-    uint8_t lane3:5;
-    uint8_t lane2:5;
-    uint8_t lane1:5;
-    uint8_t lane0:5;
+    uint8_t reserved:4;   /* [20:23] Reserved. Must be 1111b */
+    uint8_t lane3:5;      /* [19:15] Lane 3 Port Number */
+    uint8_t lane2:5;      /* [14:10] Lane 2 Port Number */
+    uint8_t lane1:5;      /* [9:5] Lane 1 Port Number */
+    uint8_t lane0:5;      /* [4:0] Lane 0 Port Number */
 #else
     uint8_t lane0:5;
     uint8_t lane1:5;
@@ -210,13 +210,16 @@ typedef struct __attribute__ ((__packed__)) {
 typedef struct __attribute__ ((__packed__)) {
     /* LSB First */
 #ifdef BF_MS_FIRST
-    uint8_t reserved:6,
-        assymetric_match:2;
-    uint8_t link_grouping_id;
-    uint16_t link_type_ext:4,
-        link_type:8,
-        lane_bit_flag:4;
-    uint8_t amc_channel_id;
+    uint8_t reserved:6,          /* [7:2] Reserved. Must be 111111b */
+        assymetric_match:2;      /* [1:0] AMC Assymetric Match */
+    uint8_t link_grouping_id;    /* Link Grouping ID */
+    uint16_t link_type_ext:4,    /* [15:12] AMC Link Type extension */
+        link_type:8,             /* [11:4] AMC Link Type */
+        lane_bit_flag:4;         /* [3] Lane 3 Bit flag (0: Excluded; 1: Included)*/
+                                 /* [2] Lane 2 Bit flag (0: Excluded; 1: Included)*/
+                                 /* [1] Lane 1 Bit flag (0: Excluded; 1: Included)*/
+                                 /* [0] Lane 0 Bit flag (0: Excluded; 1: Included)*/
+    uint8_t amc_channel_id;      /* AMC Channel ID */
 #else
     uint8_t amc_channel_id;
     uint16_t lane_bit_flag:4,
@@ -260,9 +263,9 @@ typedef struct amc_point_to_point_record {
 
 typedef struct indirect_clock_descriptor {
 #ifdef BF_MS_FIRST
-    uint8_t reserved:6,
-        pll_connection:1,
-        clock_assymetric_match:1;
+    uint8_t reserved:6,                /* [7:2] Reserved. Write as 0h */
+        pll_connection:1,              /* [1] PLL Connection */
+        clock_assymetric_match:1;      /* [0] Clock Assymetric Match (0: Source; 1: Receiver) */
 #else
     uint8_t clock_assymetric_match:1,
         pll_connection:1,
@@ -273,9 +276,9 @@ typedef struct indirect_clock_descriptor {
 
 typedef struct direct_clock_descriptor {
 #ifdef BF_MS_FIRST
-    uint8_t reserved:6,
-        pll_connection:1,
-        clock_assymetric_match:1;
+    uint8_t reserved:6,                 /* [7:2] Reserved. Write as 0h */
+        pll_connection:1,               /* [1] PLL Connection */
+        clock_assymetric_match:1;       /* [0] Clock Assymetric Match (0: Source; 1: Receiver) */
 #else
     uint8_t clock_assymetric_match:1,
         pll_connection:1,
@@ -283,16 +286,16 @@ typedef struct direct_clock_descriptor {
 #endif
     uint8_t clock_family;
     uint8_t accuracy_level;
-    uint8_t clock_frequency[4];
-    uint8_t clock_minimum_frequency[4];
-    uint8_t clock_maximum_frequency[4];
+    uint8_t clock_frequency[4];         /* In Hz. LSB First */
+    uint8_t clock_minimum_frequency[4]; /* In Hz. LSB First */
+    uint8_t clock_maximum_frequency[4]; /* In Hz. LSB First */
 } direct_clock_descriptor_t;
 
 typedef struct clock_config_descriptor {
     uint8_t clock_id;
 #ifdef BF_MS_FIRST
-    uint8_t reserved:7,
-        clock_activation_control:1;
+    uint8_t reserved:7,                 /* [7:1] Reserved. Write as 0 */
+        clock_activation_control:1;     /* [0] Clock Activation ctl (0: Activated by Carrier IPMC; 1: Activated by application) */
 #else
     uint8_t clock_activation_control:1,
         reserved:7;
@@ -370,10 +373,10 @@ typedef struct zone3_compatibility_rec {
                                three byte ID assigned to PICMG®. For this
                                specification, the value 12634 (00315Ah) shall
                                be used. */
-    uint8_t picmg_rec_id;   /* PICMG Record ID. */
+    uint8_t picmg_rec_id;   /* PICMG Record ID. Must be 30h */
     uint8_t rec_fmt_ver;    /* Record Format Version. For Zone 3 descriptor the value 0x01 shall be used. */
     uint8_t interface_id_type;
-    uint8_t user_manuf_id[3];
+    uint8_t user_manuf_id[3]; /* Custom manufacturer ID. LSB first */
     uint8_t compat_designator[4];
 } zone3_compatibility_rec_t;
 
